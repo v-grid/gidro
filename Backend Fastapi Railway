@@ -1,10 +1,10 @@
-`from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 import datetime
 
-DATABASE_URL = "postgresql://postgres:iqctUHZDSblHxNmMqBNvoaqndDbxEyhl@switchback.proxy.rlwy.net:21333/railway"  # Замените на данные Railway
+DATABASE_URL = "postgresql://user:password@host:port/database"  # Замените на данные Railway
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
