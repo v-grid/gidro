@@ -5,10 +5,10 @@ from sqlalchemy.orm import sessionmaker, Session
 import datetime
 import os
 
-# 📌 Получаем данные БД из переменных среды (Railway автоматически задаст их)
+# 📌 Получаем данные БД из переменных среды (Render автоматически задаст)
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-# Подключение к БД
+# Подключение к PostgreSQL
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
