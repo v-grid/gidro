@@ -1,21 +1,24 @@
+import os
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 import datetime
-import os
 
-# 📌 Получаем данные БД из переменных среды (Render автоматически задаст)
+# Загружаем URL базы из переменных окружения
 DATABASE_URL = os.getenv("DATABASE_URL")
+if not DATABASE_URL:
+    raise ValueError("DATABASE_URL не установлен")
 
-# Подключение к PostgreSQL
+# Настройки БД
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
+# Создаем экземпляр FastAPI
 app = FastAPI()
 
-# 📌 Модель данных
+# Определение моделей
 class DeviceData(Base):
     __tablename__ = "device_data"
     id = Column(Integer, primary_key=True, index=True)
@@ -35,10 +38,10 @@ class Settings(Base):
     max_ph = Column(Float, nullable=False)
     min_ph = Column(Float, nullable=False)
 
-# 📌 Создаем таблицы, если их нет
+# Создание таблиц в БД (если их нет)
 Base.metadata.create_all(bind=engine)
 
-# 📌 Функция получения сессии БД
+# Функция для работы с БД
 def get_db():
     db = SessionLocal()
     try:
@@ -46,35 +49,43 @@ def get_db():
     finally:
         db.close()
 
-# 📌 Авторизация
+# Авторизация (простая проверка логина и пароля)
 @app.get("/login")
 def login(username: str, password: str):
     if username == "gidro" and password == "gidro":
         return {"message": "Success"}
     raise HTTPException(status_code=401, detail="Invalid credentials")
 
-# 📌 Получение данных
+# Получение последних 7 записей с устройства
 @app.get("/data")
 def get_data(db: Session = Depends(get_db)):
     data = db.query(DeviceData).order_by(DeviceData.timestamp.desc()).limit(7).all()
     return data
 
-# 📌 Сохранение данных от устройства
+# Сохранение новых данных от устройства
 @app.post("/data")
 def save_data(data: DeviceData, db: Session = Depends(get_db)):
     db.add(data)
     db.commit()
     return {"message": "Data saved"}
 
-# 📌 Получение настроек
+# Получение текущих настроек
 @app.get("/settings")
 def get_settings(db: Session = Depends(get_db)):
     settings = db.query(Settings).first()
+    if not settings:
+        raise HTTPException(status_code=404, detail="Settings not found")
     return settings
 
-# 📌 Обновление настроек
+# Обновление настроек
 @app.post("/settings")
 def update_settings(settings: Settings, db: Session = Depends(get_db)):
-    db.query(Settings).update(settings.dict())
+    existing_settings = db.query(Settings).first()
+    if existing_settings:
+        # Обновляем существующие настройки
+        db.delete(existing_settings)
+        db.commit()
+    
+    db.add(settings)
     db.commit()
     return {"message": "Settings updated"}
