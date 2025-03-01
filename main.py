@@ -82,6 +82,11 @@ class SettingsResponse(SettingsBase):
     class Config:
         orm_mode = True  # Для преобразования SQLAlchemy моделей в Pydantic
 
+# Добавляем обработчик корневого маршрута (чтобы избежать 404)
+@app.get("/")
+def read_root():
+    return {"message": "API is running"}
+
 # Авторизация (простая проверка логина и пароля)
 @app.get("/login")
 def login(username: str, password: str):
