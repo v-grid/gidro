@@ -6,7 +6,7 @@ import datetime
 import os
 
 # 📌 Получаем данные БД из переменных среды (Railway автоматически задаст их)
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:password@host:port/database")
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:iqctUHZDSblHxNmMqBNvoaqndDbxEyhl@postgres.railway.internal:5432/railway")
 
 # Подключение к БД
 engine = create_engine(DATABASE_URL)
