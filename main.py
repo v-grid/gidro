@@ -134,7 +134,7 @@ def update_settings(settings: SettingsBase, db: Session = Depends(get_db)):
     return db_settings
 
 # Фоновая задача для поддержания активности сервера
-DOMAIN = "https://ТВОЙ_ДОМЕН.render.com"
+DOMAIN = "https://gidro-2.onrender.com"
 
 def keep_alive():
     while True:
