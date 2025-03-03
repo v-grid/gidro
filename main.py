@@ -1,4 +1,7 @@
 import os
+import threading
+import time
+import requests
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime
 from sqlalchemy.ext.declarative import declarative_base
@@ -68,7 +71,7 @@ class DeviceDataResponse(DeviceDataBase):
     id: int
 
     class Config:
-        orm_mode = True  # Для преобразования SQLAlchemy моделей в Pydantic
+        orm_mode = True
 
 class SettingsBase(BaseModel):
     max_tds: float
@@ -80,14 +83,14 @@ class SettingsResponse(SettingsBase):
     id: int
 
     class Config:
-        orm_mode = True  # Для преобразования SQLAlchemy моделей в Pydantic
+        orm_mode = True
 
-# Добавляем обработчик корневого маршрута (чтобы избежать 404)
+# Добавляем обработчик корневого маршрута
 @app.get("/")
 def read_root():
     return {"message": "API is running"}
 
-# Авторизация (простая проверка логина и пароля)
+# Авторизация
 @app.get("/login")
 def login(username: str, password: str):
     if username == "gidro" and password == "gidro":
@@ -103,10 +106,10 @@ def get_data(db: Session = Depends(get_db)):
 # Сохранение новых данных от устройства
 @app.post("/data", response_model=DeviceDataResponse)
 def save_data(data: DeviceDataCreate, db: Session = Depends(get_db)):
-    db_data = DeviceData(**data.dict())  # Преобразуем Pydantic модель в SQLAlchemy модель
+    db_data = DeviceData(**data.dict())
     db.add(db_data)
     db.commit()
-    db.refresh(db_data)  # Получаем ID после сохранения
+    db.refresh(db_data)
     return db_data
 
 # Получение текущих настроек
@@ -125,7 +128,24 @@ def update_settings(settings: SettingsBase, db: Session = Depends(get_db)):
         db.delete(existing_settings)
         db.commit()
     
-    db_settings = Settings(**settings.dict())  # Преобразуем Pydantic модель в SQLAlchemy модель
+    db_settings = Settings(**settings.dict())
     db.add(db_settings)
     db.commit()
     return db_settings
+
+# Фоновая задача для поддержания активности сервера
+DOMAIN = "https://ТВОЙ_ДОМЕН.render.com"
+
+def keep_alive():
+    while True:
+        try:
+            requests.get(DOMAIN)
+            print("Keep-alive ping sent")
+        except Exception as e:
+            print("Ошибка keep-alive:", e)
+        time.sleep(300)  # Раз в 5 минут
+
+@app.on_event("startup")
+def start_keep_alive():
+    thread = threading.Thread(target=keep_alive, daemon=True)
+    thread.start()
