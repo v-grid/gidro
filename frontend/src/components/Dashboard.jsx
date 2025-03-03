@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 
 import axios from "axios";
 
-const API_URL = "https://your-api-url.com"; // Замените на реальный URL
+const API_URL = "https://gidro-2.onrender.com"; // Замените на реальный URL
 
 export default function Dashboard() {
   const [data, setData] = useState([]);
@@ -59,11 +59,11 @@ export default function Dashboard() {
 
   return (
     <div className="p-4 grid gap-4">
-      <h1 className="text-2xl font-bold">Мониторинг системы</h1>
+      {/*<h1 className="text-2xl font-bold">Мониторинг системы</h1>*/}
       
       <Card>
         <CardContent>
-          <h2 className="text-xl font-semibold">Последние данные</h2>
+          {/*<h2 className="text-xl font-semibold">Последние данные</h2>*/}
           {data.map((item) => (
             <div key={item.id} className="border-b py-2">
               <p>TDS: {item.tds} | pH: {item.ph} | Уровень воды: {item.water_level}</p>

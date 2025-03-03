@@ -11,13 +11,15 @@ from pydantic import BaseModel
 from typing import List, Optional
 from fastapi.staticfiles import StaticFiles
 
-
 # Определяем путь к собранному фронтенду
-frontend_path = os.path.join(os.path.dirname(__file__), "frontend/dist")
+frontend_path = os.path.join(os.path.dirname(__file__), "frontend", "dist")
 
-# Проверяем, существует ли папка
 if os.path.exists(frontend_path):
     app.mount("/", StaticFiles(directory=frontend_path, html=True), name="frontend")
+else:
+    print("⚠️ Папка frontend/dist не найдена! Запустите `npm run build` в папке frontend.")
+
+
 
 
 
