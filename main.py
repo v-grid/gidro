@@ -9,6 +9,16 @@ from sqlalchemy.orm import sessionmaker, Session
 import datetime
 from pydantic import BaseModel
 from typing import List, Optional
+from fastapi.staticfiles import StaticFiles
+
+
+# Определяем путь к собранному фронтенду
+frontend_path = os.path.join(os.path.dirname(__file__), "frontend/dist")
+
+# Проверяем, существует ли папка
+if os.path.exists(frontend_path):
+    app.mount("/", StaticFiles(directory=frontend_path, html=True), name="frontend")
+
 
 # Загружаем URL базы из переменных окружения
 DATABASE_URL = os.getenv("DATABASE_URL")
