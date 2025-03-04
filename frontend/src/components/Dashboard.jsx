@@ -38,14 +38,21 @@ export default function Dashboard() {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.get(`${API_URL}/login`, { params: auth });
-      if (response.data.message === "Success") {
-        setIsAuthenticated(true);
-      }
+        const formData = new URLSearchParams();
+        formData.append("username", auth.username);
+        formData.append("password", auth.password);
+
+        const response = await axios.post(`${API_URL}/login`, formData, {
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        });
+
+        if (response.data.message === "Success") {
+            setIsAuthenticated(true);
+        }
     } catch (error) {
-      alert("Неверные учетные данные");
+        alert("Неверные учетные данные");
     }
-  };
+};
 
   const updateSettings = async () => {
     try {
