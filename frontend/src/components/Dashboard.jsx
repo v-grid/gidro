@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 import axios from "axios";
-
+const API_URL = "https://gidro-2.onrender.com"
 // Используем переменную окружения для API URL
-const API_URL = import.meta.env.VITE_API_URL;
+//const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Dashboard() {
   const [data, setData] = useState([]);
