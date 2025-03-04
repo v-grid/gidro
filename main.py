@@ -13,6 +13,7 @@ from typing import List, Optional
 from fastapi.staticfiles import StaticFiles
 
 
+
 # Загружаем URL базы из переменных окружения
 DATABASE_URL = os.getenv("DATABASE_URL")
 if not DATABASE_URL:
@@ -29,6 +30,7 @@ Base = declarative_base()
 
 # Создаем экземпляр FastAPI
 app = FastAPI()
+
 
 # Определяем путь к собранному фронтенду
 frontend_path = os.path.join(os.path.dirname(__file__), "frontend", "dist")
@@ -108,11 +110,11 @@ class SettingsResponse(SettingsBase):
 def read_root():
     return {"message": "API is running"}
 
-#@app.get("/login")
-#def login(username: str = Query(...), password: str = Query(...)):
- #   if username == "gidro" and password == "gidro":
- #       return {"message": "Success"}
- #   raise HTTPException(status_code=401, detail="Invalid credentials")
+@app.get("/login")
+def login(username: str = Query(...), password: str = Query(...)):
+    if username == "gidro" and password == "gidro":
+        return {"message": "Success"}
+    raise HTTPException(status_code=401, detail="Invalid credentials")
 
 @app.get("/data", response_model=List[DeviceDataResponse])
 def get_data(db: Session = Depends(get_db)):
@@ -165,4 +167,4 @@ async def start_keep_alive():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", 8000)))
+    uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", 10000)))
