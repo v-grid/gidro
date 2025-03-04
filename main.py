@@ -3,7 +3,7 @@ import asyncio
 import httpx
 import threading
 import time
-from fastapi import FastAPI, Depends, HTTPException, Form, Query
+from fastapi import FastAPI, Depends, HTTPException, Form, Query, Request
 from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
@@ -186,4 +186,4 @@ async def start_keep_alive():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", 10000)))
+    uvicorn.run("main:app", host="0.0.0.0", port=int(os.getenv("PORT", 8000)))
