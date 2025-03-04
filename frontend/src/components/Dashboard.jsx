@@ -38,13 +38,7 @@ export default function Dashboard() {
 
   const handleLogin = async () => {
     try {
-        const formData = new URLSearchParams();
-        formData.append("username", auth.username);
-        formData.append("password", auth.password);
-
-        const response = await axios.post(`${API_URL}/login`, formData, {
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        });
+        const response = await axios.get(`${API_URL}/login`, { params: auth });
 
         if (response.data.message === "Success") {
             setIsAuthenticated(true);
@@ -53,6 +47,7 @@ export default function Dashboard() {
         alert("Неверные учетные данные");
     }
 };
+
 
   const updateSettings = async () => {
     try {
