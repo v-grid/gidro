@@ -108,11 +108,11 @@ class SettingsResponse(SettingsBase):
 def read_root():
     return {"message": "API is running"}
 
-@app.get("/login")
-def login(username: str = Query(...), password: str = Query(...)):
-    if username == "gidro" and password == "gidro":
-        return {"message": "Success"}
-    raise HTTPException(status_code=401, detail="Invalid credentials")
+#@app.get("/login")
+#def login(username: str = Query(...), password: str = Query(...)):
+ #   if username == "gidro" and password == "gidro":
+ #       return {"message": "Success"}
+ #   raise HTTPException(status_code=401, detail="Invalid credentials")
 
 @app.get("/data", response_model=List[DeviceDataResponse])
 def get_data(db: Session = Depends(get_db)):
