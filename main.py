@@ -14,13 +14,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Разрешить все домены или указать конкретные
-    allow_credentials=True,
-    allow_methods=["*"],  # Разрешить все HTTP методы
-    allow_headers=["*"],  # Разрешить все заголовки
-)
+
 
 
 
@@ -41,6 +35,13 @@ Base = declarative_base()
 # Создаем экземпляр FastAPI
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Разрешить все домены или указать конкретные
+    allow_credentials=True,
+    allow_methods=["*"],  # Разрешить все HTTP методы
+    allow_headers=["*"],  # Разрешить все заголовки
+)
 
 # Определяем путь к собранному фронтенду
 frontend_path = os.path.join(os.path.dirname(__file__), "frontend", "dist")
