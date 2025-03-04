@@ -134,7 +134,7 @@ async def login(request: Request):
 @app.get("/data", response_model=List[DeviceDataResponse])
 def get_data(db: Session = Depends(get_db)):
     return db.query(DeviceData).order_by(DeviceData.timestamp.desc()).limit(7).all()
-    @app.post("/login")
+@app.post("/login")
 async def login(username: str, password: str):
     print(f"Received login attempt with username={username} and password={password}")
 
