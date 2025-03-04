@@ -3,7 +3,7 @@ import asyncio
 import httpx
 import threading
 import time
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Form
 from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
@@ -11,7 +11,7 @@ import datetime
 from pydantic import BaseModel
 from typing import List, Optional
 from fastapi.staticfiles import StaticFiles
-from fastapi import Form
+
 
 # Загружаем URL базы из переменных окружения
 DATABASE_URL = os.getenv("DATABASE_URL")
