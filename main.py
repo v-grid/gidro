@@ -3,7 +3,7 @@ import asyncio
 import httpx
 import threading
 import time
-from fastapi import FastAPI, Depends, HTTPException, Form
+from fastapi import FastAPI, Depends, HTTPException, Form, Query
 from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
@@ -108,8 +108,8 @@ class SettingsResponse(SettingsBase):
 def read_root():
     return {"message": "API is running"}
 
-@app.post("/login")
-def login(username: str = Form(...), password: str = Form(...)):
+@app.get("/login")
+def login(username: str = Query(...), password: str = Query(...)):
     if username == "gidro" and password == "gidro":
         return {"message": "Success"}
     raise HTTPException(status_code=401, detail="Invalid credentials")
