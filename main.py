@@ -111,7 +111,7 @@ def read_root():
     return {"message": "API is running"}
 
 @app.get("/login")
-def login(username: str = Query(...), password: str = Query(...)):
+def login(username: str = Form(...), password: str = Form(...)):
     if username == "gidro" and password == "gidro":
         return {"message": "Success"}
     raise HTTPException(status_code=401, detail="Invalid credentials")
