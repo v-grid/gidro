@@ -82,11 +82,15 @@ class DeviceDataBase(BaseModel):
 class DeviceDataCreate(DeviceDataBase):
     pass
 
-class DeviceDataResponse(DeviceDataBase):
+class DeviceDataResponse(BaseModel):
     id: int
+    tds: float
+    ph: float
+    water_level: float
+    timestamp: str
 
     class Config:
-        from_attributes = True 
+        from_attributes = True  
 
 class SettingsBase(BaseModel):
     max_tds: float
@@ -97,7 +101,7 @@ class SettingsBase(BaseModel):
 class SettingsResponse(SettingsBase):
     id: int
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # API маршруты
 @app.get("/")
