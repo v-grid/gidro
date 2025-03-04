@@ -12,6 +12,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 app.add_middleware(
     CORSMiddleware,
@@ -120,10 +121,15 @@ def read_root():
     return {"message": "API is running"}
 
 @app.get("/login")
-def login(username: str = Form(...), password: str = Form(...)):
+async def login(request: Request):
+    username = request.query_params.get('username')
+    password = request.query_params.get('password')
+    
+    # Проверка логина и пароля
     if username == "gidro" and password == "gidro":
-        return {"message": "Success"}
-    raise HTTPException(status_code=401, detail="Invalid credentials")
+        return JSONResponse(content={"message": "Login successful!"}, status_code=200)
+    else:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
 
 @app.get("/data", response_model=List[DeviceDataResponse])
 def get_data(db: Session = Depends(get_db)):

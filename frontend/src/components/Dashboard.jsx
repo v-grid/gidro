@@ -37,22 +37,30 @@ export default function Dashboard() {
     }
   };
 
-  const handleLogin = async () => {
-  try {
-    const response = await axios.get(`${API_URL}/login`, {
-      params: {
-        username: auth.username,
-        password: auth.password,
-      }
-    });
-
-    if (response.data.message === "Success") {
-      setIsAuthenticated(true);
+  const loginForm = document.getElementById('loginForm');
+loginForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    
+    const formData = new FormData(loginForm);
+    const username = formData.get('username');
+    const password = formData.get('password');
+    
+    try {
+        const response = await fetch(`/login?username=${username}&password=${password}`, {
+            method: 'GET',
+        });
+        
+        const result = await response.json();
+        if (response.ok) {
+            console.log('Login successful:', result);
+        } else {
+            console.log('Login failed:', result);
+        }
+    } catch (error) {
+        console.error('Error during login request:', error);
     }
-  } catch (error) {
-    alert("Неверные учетные данные");
-  }
-};
+});
+
 
   const updateSettings = async () => {
     try {
@@ -81,7 +89,7 @@ export default function Dashboard() {
           <h2 className="text-xl">Авторизация</h2>
           <Input placeholder="Логин" onChange={(e) => setAuth({ ...auth, username: e.target.value })} />
           <Input placeholder="Пароль" type="password" onChange={(e) => setAuth({ ...auth, password: e.target.value })} />
-          <Button onClick={handleLogin}>Войти</Button>
+          <Button onClick={loginForm}>Войти</Button>
         </div>
       ) : (
         <Card>
