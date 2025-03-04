@@ -11,6 +11,7 @@ import datetime
 from pydantic import BaseModel
 from typing import List, Optional
 from fastapi.staticfiles import StaticFiles
+from fastapi import Form
 
 # Загружаем URL базы из переменных окружения
 DATABASE_URL = os.getenv("DATABASE_URL")
@@ -83,8 +84,9 @@ class DeviceDataCreate(DeviceDataBase):
 
 class DeviceDataResponse(DeviceDataBase):
     id: int
+
     class Config:
-        orm_mode = True
+        from_attributes = True 
 
 class SettingsBase(BaseModel):
     max_tds: float
