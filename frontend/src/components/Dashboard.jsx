@@ -2,11 +2,9 @@ import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
 import axios from "axios";
-const API_URL = "https://gidro-2.onrender.com"
-// Используем переменную окружения для API URL
-//const API_URL = import.meta.env.VITE_API_URL;
+
+const API_URL = "https://gidro-2.onrender.com";
 
 export default function Dashboard() {
   const [data, setData] = useState([]);
@@ -37,33 +35,27 @@ export default function Dashboard() {
     }
   };
 
-  const loginForm = document.getElementById('loginForm');
-	loginForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    console.log("Форма отправлена, обработчик вызван"); // Проверяем, срабатывает ли
-	console.log("Отправка запроса на:", `/login?username=${username}&password=${password}`)
+  const handleLogin = async () => {
+    console.log("Форма отправлена, обработчик вызван");
+    console.log("Отправка запроса на:", `/login?username=${auth.username}&password=${auth.password}`);
 
-    
-    const formData = new FormData(loginForm);
-    const username = formData.get('username');
-    const password = formData.get('password');
-    
     try {
-        const response = await fetch(`/login?username=${username}&password=${password}`, {
-            method: 'GET',
-        });
-        
-        const result = await response.json();
-        if (response.ok) {
-            console.log('Login successful:', result);
-        } else {
-            console.log('Login failed:', result);
-        }
-    } catch (error) {
-        console.error('Error during login request:', error);
-    }
-});
+      const response = await fetch(`/login?username=${auth.username}&password=${auth.password}`, {
+        method: 'GET',
+      });
 
+      const result = await response.json();
+      if (response.ok) {
+        console.log('Login successful:', result);
+        setIsAuthenticated(true); // Авторизация успешна, изменяем состояние
+      } else {
+        console.log('Login failed:', result);
+        setIsAuthenticated(false);
+      }
+    } catch (error) {
+      console.error('Error during login request:', error);
+    }
+  };
 
   const updateSettings = async () => {
     try {
@@ -86,22 +78,47 @@ export default function Dashboard() {
           ))}
         </CardContent>
       </Card>
-      
+
       {!isAuthenticated ? (
         <div>
           <h2 className="text-xl">Авторизация</h2>
-          <Input placeholder="Логин" onChange={(e) => setAuth({ ...auth, username: e.target.value })} />
-          <Input placeholder="Пароль" type="password" onChange={(e) => setAuth({ ...auth, password: e.target.value })} />
-          <Button onClick={loginForm}>Войти</Button>
+          <Input
+            placeholder="Логин"
+            value={auth.username}
+            onChange={(e) => setAuth({ ...auth, username: e.target.value })}
+          />
+          <Input
+            placeholder="Пароль"
+            type="password"
+            value={auth.password}
+            onChange={(e) => setAuth({ ...auth, password: e.target.value })}
+          />
+          <Button onClick={handleLogin}>Войти</Button>
         </div>
       ) : (
         <Card>
           <CardContent>
             <h2 className="text-xl font-semibold">Настройки</h2>
-            <Input placeholder="Макс. TDS" value={settings.max_tds} onChange={(e) => setSettings({ ...settings, max_tds: e.target.value })} />
-            <Input placeholder="Мин. TDS" value={settings.min_tds} onChange={(e) => setSettings({ ...settings, min_tds: e.target.value })} />
-            <Input placeholder="Макс. pH" value={settings.max_ph} onChange={(e) => setSettings({ ...settings, max_ph: e.target.value })} />
-            <Input placeholder="Мин. pH" value={settings.min_ph} onChange={(e) => setSettings({ ...settings, min_ph: e.target.value })} />
+            <Input
+              placeholder="Макс. TDS"
+              value={settings.max_tds}
+              onChange={(e) => setSettings({ ...settings, max_tds: e.target.value })}
+            />
+            <Input
+              placeholder="Мин. TDS"
+              value={settings.min_tds}
+              onChange={(e) => setSettings({ ...settings, min_tds: e.target.value })}
+            />
+            <Input
+              placeholder="Макс. pH"
+              value={settings.max_ph}
+              onChange={(e) => setSettings({ ...settings, max_ph: e.target.value })}
+            />
+            <Input
+              placeholder="Мин. pH"
+              value={settings.min_ph}
+              onChange={(e) => setSettings({ ...settings, min_ph: e.target.value })}
+            />
             <Button onClick={updateSettings}>Сохранить</Button>
           </CardContent>
         </Card>
