@@ -11,6 +11,15 @@ import datetime
 from pydantic import BaseModel
 from typing import List, Optional
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Разрешить все домены или указать конкретные
+    allow_credentials=True,
+    allow_methods=["*"],  # Разрешить все HTTP методы
+    allow_headers=["*"],  # Разрешить все заголовки
+)
 
 
 
@@ -119,6 +128,9 @@ def login(username: str = Form(...), password: str = Form(...)):
 @app.get("/data", response_model=List[DeviceDataResponse])
 def get_data(db: Session = Depends(get_db)):
     return db.query(DeviceData).order_by(DeviceData.timestamp.desc()).limit(7).all()
+    @app.post("/login")
+async def login(username: str, password: str):
+    print(f"Received login attempt with username={username} and password={password}")
 
 @app.post("/data", response_model=DeviceDataResponse)
 def save_data(data: DeviceDataCreate, db: Session = Depends(get_db)):
