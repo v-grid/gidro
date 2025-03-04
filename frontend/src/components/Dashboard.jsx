@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 
 import axios from "axios";
 
-const API_URL = "https://gidro-2.onrender.com"; // Замените на реальный URL
+// Используем переменную окружения для API URL
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function Dashboard() {
   const [data, setData] = useState([]);
@@ -46,8 +47,7 @@ export default function Dashboard() {
     } catch (error) {
         alert("Неверные учетные данные");
     }
-};
-
+  };
 
   const updateSettings = async () => {
     try {
@@ -61,11 +61,8 @@ export default function Dashboard() {
 
   return (
     <div className="p-4 grid gap-4">
-      {/*<h1 className="text-2xl font-bold">Мониторинг системы</h1>*/}
-      
       <Card>
         <CardContent>
-          {/*<h2 className="text-xl font-semibold">Последние данные</h2>*/}
           {data.map((item) => (
             <div key={item.id} className="border-b py-2">
               <p>TDS: {item.tds} | pH: {item.ph} | Уровень воды: {item.water_level}</p>
