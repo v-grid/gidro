@@ -38,8 +38,11 @@ export default function Dashboard() {
   };
 
   const loginForm = document.getElementById('loginForm');
-loginForm.addEventListener('submit', async (event) => {
+	loginForm.addEventListener('submit', async (event) => {
     event.preventDefault();
+    console.log("Форма отправлена, обработчик вызван"); // Проверяем, срабатывает ли
+	console.log("Отправка запроса на:", `/login?username=${username}&password=${password}`)
+
     
     const formData = new FormData(loginForm);
     const username = formData.get('username');
